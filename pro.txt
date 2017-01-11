@@ -1,0 +1,74 @@
+Pro
+
+package com.rito.op;
+
+import java.io.*;
+
+import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.sql.*;
+
+
+@WebServlet("/Pro")
+public class Pro extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doPost(request,response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.setContentType("text/html");
+		PrintWriter out=response.getWriter();
+		String name=request.getParameter("fname");
+		String address=request.getParameter("address");
+		String phone=request.getParameter("phone");
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection cn=DriverManager.getConnection("jdbc:mysql://localhost:3306/lbef","root","");
+			String strdata="insert into stuinfo(fname,address,phone) values('"+name+"','"+address+"','"+phone+"')";
+			PreparedStatement ps=cn.prepareStatement(strdata);
+			ps.executeUpdate();
+			out.println("Saved!!");
+		}
+		catch(Exception e){
+			out.println(e);	
+		}
+		
+	}
+
+}
+
+
+
+
+
+
+index
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body><h2>Form Submitting</h2>
+<form action="Pro" method="post">
+<table>
+<tr><td>Full Name</td><td><input type="text" name="fname" placeholder="Enter Name"/></td></tr>
+<tr><td>Address</td><td><input type="text" name="address" placeholder="Enter address"/></td></tr>
+<tr><td>Phone </td><td><input type="text" name="phone" placeholder="Enter phone"/></td></tr>
+
+<tr><td><input type="submit" name="send" value="send"></td><td><input type="reset" name="reset" value="clear"/>
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

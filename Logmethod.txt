@@ -1,0 +1,56 @@
+Write a servlet program to log the exception by using log method.
+
+index.html
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="Log" method="post">
+First Number: <input type="text" name="num1"><br>
+Second Number: <input type="text" name="num2"><br>
+<input type="Submit" value="Send">
+
+</form>
+</body>
+</html>
+
+
+
+Log.java
+
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+@WebServlet("/Log")
+public class Log extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out=response.getWriter();
+		try{
+			int a=Integer.parseInt(request.getParameter("num1"));
+			int b=Integer.parseInt(request.getParameter("num2"));
+			out.println("It is integer");
+		}
+		catch(Exception e){
+			log("Incorrect number: "+e.getMessage());
+			response.sendError(response.SC_INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
+
+}

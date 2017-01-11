@@ -1,0 +1,71 @@
+Selecting data from database.
+
+select.html
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="Select" method="post" >
+First Name:<input type="text" name="fname"/><br/>
+Last Name:<input type="text" name="lname"/><br/>
+Email:<input type="text" name="email"/><br/>
+Address:<input type="text" name="address"/><br/>
+<br/><input type="submit" value="send"/>
+</form>
+</body>
+</html>
+
+
+Select.java
+
+
+
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.sql.*;
+
+@WebServlet("/Select")
+public class Select extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out=response.getWriter();
+		String fname=request.getParameter("fname");
+		String lname=request.getParameter("lname");
+		String email=request.getParameter("email");
+		String address=request.getParameter("address");
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/rito","root","");
+			String strdata="select * from employee where id=?";
+			PreparedStatement st=con.prepareStatement(strdata);
+			ResultSet rs=st.executeQuery();
+			if(rs.next()){
+				out.println("<html><body>");
+				out.println("<table><tr><th>"+fname+"</th><th>"+lname+"</th><th>"+email+"</th><th>"+address+"</th></tr></table>");
+				
+			}
+			else{
+				out.println("Error receiving files");
+			}
+		}catch(Exception e){
+			out.println(e);
+		}
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}

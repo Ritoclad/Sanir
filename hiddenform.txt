@@ -1,0 +1,74 @@
+hidden form field usinfg servlet
+
+
+index.html
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="Hidden" method="post">
+<input type="hidden" name="visitor" value="admin">
+<input type="hidden" name="passno" value="lbef">
+<input type="submit" value="send">
+</form>
+</body>
+</html>
+
+
+
+Hidden.java
+
+
+
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+@WebServlet("/Hidden")
+public class Hidden extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	response.setContentType("text/html");
+	PrintWriter out=response.getWriter();
+	out.println("<html>");
+	out.println("<head><title>Hidden Form</title></head>");
+	out.println("<body>");
+	out.println("<form action="+"\"/Hidden\" method=\"post\">");
+	out.println("<input type=\"hidden\" name="+"\"visitor\" value=\"lbef\">");
+	out.println("<input type=\"hidden\" name="+"\"passno\" value=\"admin\">");
+	out.println("<input type=\"hidden\" name="+"\"dept\" value=\"Software and computing department\">");
+	out.println("<input type=\"hidden\" name="+"\"dept\" value=\"Bio Technology\">");
+	out.println("<input type=\"submit\" value=\"Submit\">");
+	out.println("</form>");
+	out.println("</html>");
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.setContentType("text/html");
+		PrintWriter out=response.getWriter();
+		out.println("<html>");
+		out.println("<head><title>Hidden Form</title></head>");
+		out.println("<body>");
+		String user=request.getParameter("visitor");
+		String session=request.getParameter("passno");
+		out.println("<h4>"+user+",various department college are:</h4><br>");
+		String[] department=request.getParameterValues("dept");
+		if(department!=null){
+			for(int x=0; x<department.length;x++){
+				out.println(department[x]+"<br>");
+				
+			}
+		}
+		out.println("</body></html>");
+		out.close();
+	}
+
+}

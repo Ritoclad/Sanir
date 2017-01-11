@@ -1,0 +1,27 @@
+Public Class Form1
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim c As Integer
+        For c = 1 To 10
+            ComboBox1.Items.Add("For" & c)
+        Next
+    End Sub
+
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        Dim t As Integer
+        t = 1
+        While t <= 10
+            ComboBox2.Items.Add(t)
+            t = t + 2
+        End While
+
+    End Sub
+End Class

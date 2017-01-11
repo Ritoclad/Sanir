@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="Session" method="get">
+<h2>Student Information</h2>
+<table>
+<tr><th>Enter Name</th><th><input type="text" name="name"></th>
+</tr>
+<tr><th>Enter Cell NO.</th><th><input type="text" name="cell"></th>
+</tr>
+<tr><th>Enter City</th><th><input type="text" name="city"></th>
+</tr>
+<tr><th colspan=2>
+<input type="submit" name="sub" value="Submit">
+<input type="reset" name="reset" value="Reset"></th></tr>
+</table>
+</form>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+package com.rio.cr;
+
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+
+/**
+ * Servlet implementation class Session
+ */
+@WebServlet("/Session")
+public class Session extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+ 
+    public Session() {  
+    }
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out=response.getWriter();
+		HttpSession session=request.getSession(true);
+		String Name=request.getParameter("name");
+		String Cell=request.getParameter("cell");
+		String City=request.getParameter("city");
+		session.setAttribute("Name", Name);
+		session.setAttribute("Cell", Cell);
+		session.setAttribute("City", City);
+		if(session.isNew()){
+			out.println("<h1>You are new user... Login First</h1>");
+		}else{
+				RequestDispatcher rd=request.getRequestDispatcher("/Display");
+		rd.forward(request, response);		
+			}
+		out.close();
+		}
+			
+
+
+
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+	}
+
+}
+
+
+
+
+
+
+
+package com.dis.cr;
+
+import java.io.*;
+import java.util.Date;
+
+
+import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+
+@WebServlet("/Display")
+public class Display extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	response.setContentType("text/html");
+	PrintWriter out=response.getWriter();
+	HttpSession session=request.getSession(true);
+	String name=(String)session.getAttribute("Name");
+	String cell=(String)session.getAttribute("Cell");
+	String city=(String)session.getAttribute("City");
+
+	out.println("Your name is:"+name+"<br>");
+	out.println("Your cell no is:"+cell+"<br>");
+	out.println("Your city is:"+city+"<br>");
+	out.println("<h1>Session Information.....</h1><br>");
+	out.println("<h4>Session Id</h4><br>"+session.getId());
+	out.println("<h4>Session Time</h4><br>"+new Date(session.getCreationTime()));
+	out.println("<h4>last Accessed Time</h4><br>"+new Date(session.getLastAccessedTime()));
+	out.close();
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+	
+	}
+
+}

@@ -1,0 +1,305 @@
+login in username and password to view your name and password
+
+
+
+login.html
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Login</title>
+</head>
+<body>
+<form method="post" action="Logincontroller" >
+<table>
+<tr><th colspan=2>Please Login</th></tr>
+<tr><th>User name</th><th>
+<input type="text" name="name" placeholder="Enter your name" id=name></th></tr>
+<tr><th>Password</th><th>
+<input type="password" name="password" placeholder="Enter password"></th></tr>
+<tr><th colspan=2>
+<input type="submit" value="LogIn">
+<input type="reset" value="reset">
+</th></tr>
+<tr><th colspan=2>
+<a href="View">View all</a>
+</th></tr>
+</table>
+</form>
+</body>
+</html>
+
+
+LoginController.java
+
+
+
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.sql.*;
+
+@WebServlet("/Logincontroller")
+public class Logincontroller extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doPost(request,response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out=response.getWriter();
+		String name=request.getParameter("name");
+		String pwd=request.getParameter("password");
+		PreparedStatement ps=null;
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection cn=DriverManager.getConnection("jdbc:mysql://localhost:3306/ri","root","");
+			String strdata="select * from user where user=? and pwd=?";
+			
+			ps=cn.prepareStatement(strdata);
+			ps.setString(1,name);
+			ps.setString(2,pwd);
+			
+			ResultSet rs=ps.executeQuery();
+			if(rs.next()){
+				request.getRequestDispatcher("Welcome").forward(request,response);
+				
+			}
+			else{
+				out.println("<div class=\"errorlogin\">Username or password invalid</div>");
+				request.getRequestDispatcher("Login.html").include(request, response);
+			}
+		}
+		catch(Exception e){
+			out.println("error"+e);	
+		}
+		
+	}
+
+}
+
+
+
+Welcome.java
+
+
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class Welcome
+ */
+@WebServlet("/Welcome")
+public class Welcome extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out=response.getWriter();
+		
+		out.println("You are logged in");
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
+
+
+
+View.html
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="View" method="get" >
+<table border=1>
+<tr><th>ID</th><th></th></tr>
+<tr><th>Emp no</th><th></th></tr>
+<tr><th>Full Name</th><th></th></tr>
+<tr><th>Address</th><th></th></tr>
+<tr><th colspan=2>
+<a href="Delete">Delete</a>
+</th></tr>
+</table>
+</form>
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="View" method="get" >
+<table border=1>
+<tr><th>ID</th><th></th></tr>
+<tr><th>Emp no</th><th></th></tr>
+<tr><th>Full Name</th><th></th></tr>
+<tr><th>Address</th><th></th></tr>
+<tr><th colspan=2>
+<a href="Delete">Delete</a>
+</th></tr>
+</table>
+</form>
+</body>
+</html>
+
+View.java
+
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class View
+ */
+@WebServlet("/View")
+public class View extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out=response.getWriter();
+		String name=request.getParameter("name");
+		String pwd=request.getParameter("password");
+		
+		
+		
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection cn=DriverManager.getConnection("jdbc:mysql://localhost:3306/ri","root","");
+			String strdata="select* from user";
+			PreparedStatement ps=cn.prepareStatement(strdata);
+			ResultSet rs=ps.executeQuery(strdata);
+			
+			
+			if(rs.next()){
+				int id=rs.getInt("id");
+				name=rs.getString("user");
+				 pwd=rs.getString("pwd");
+				 out.println("<h2>Records</h2>");
+				 out.println("<table border=2><tr><td>ID</td><td>name</td><td>password</td></tr>");
+				
+				out.println("<tr><td>"+id+"</td><td>"+name+"</td><td>"+pwd+"</td></tr></table>");
+				
+				out.println("<br/>");
+				out.println("<a href='Delete'>Delete</a>");
+				//request.getRequestDispatcher("view.html").forward(request,response);
+			}}catch(Exception e){
+				out.println("Record not found");
+			}
+		out.println("</table>");
+		out.close();
+	}
+
+	
+		
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
+
+}
+
+
+
+Delete.java
+
+
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class Delete
+ */
+@WebServlet("/Delete")
+public class Delete extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doPost(request,response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out=response.getWriter();
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection cn=DriverManager.getConnection("jdbc:mysql://localhost:3306/ri","root","");
+			String strdata="delete  from user where id=? ";
+			PreparedStatement ps=cn.prepareStatement(strdata);
+			ps.setInt(1, 4);
+			ps.execute();
+			out.println("Successfully deleted");
+			
+		}
+		catch(Exception e){
+			out.println("error"+e);	
+		}
+	}}
+	
+
+

@@ -1,0 +1,85 @@
+Data Display in Grid View
+
+Dim con As New OleDb.OleDbConnection
+        con.ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\addressbook.accdb"
+        con.Open()
+        MsgBox("Open")
+        Dim sql As String
+        sql = "select * from stdrec "
+        Dim ds As New DataSet
+        Dim da As OleDb.OleDbDataAdapter
+        da = New OleDb.OleDbDataAdapter(sql, con)
+        da.Fill(ds, "stdrec")
+        'MsgBox(ds.Tables("stdrec").Rows(1).Item(0))
+        DataGridView1.DataSource = ds.Tables("stdrec")
+        MsgBox("dfdfd")
+
+Data Insertion
+
+Dim con As New OleDbConnection
+        con.ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\addressbook.accdb"
+        con.Open()
+        Dim cmd As New OleDbCommand
+        cmd.CommandText = "insert into stdrec values('" & TextBox1.Text & "','" & TextBox2.Text & "')"
+
+        cmd.Connection = con
+        cmd.ExecuteNonQuery()
+        MsgBox("Success")
+
+
+
+Data Read from Textbox
+
+
+ Dim con As New OleDbConnection
+        con.ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\addressbook.accdb"
+        con.Open()
+        Dim cmd As New OleDbCommand
+        Dim dr As OleDbDataReader
+        cmd.Connection = con
+        Dim str As String
+        str = "select * from stdrec where roll=" & TextBox1.Text & ""
+        cmd.CommandText = str
+        dr = cmd.ExecuteReader
+        dr.Read()
+       
+
+ Dim con As New OleDb.OleDbConnection
+        con.ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\addressbook.accdb"
+        con.Open()
+        MsgBox("Open")
+        Dim sql As String
+        sql = "select * from stdrec "
+        Dim ds As New DataSet
+        Dim da As OleDb.OleDbDataAdapter
+        da = New OleDb.OleDbDataAdapter(sql, con)
+        da.Fill(ds, "stdrec")
+        TextBox1.Text = ds.Tables("stdrec").Rows(1).Item(0)
+        TextBox2.Text = ds.Tables("stdrec").Rows(1).Item(1)
+
+
+nEXT RECORD
+
+ Dim con As New OleDb.OleDbConnection
+        con.ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\addressbook.accdb"
+        con.Open()
+        ' MsgBox("Open")
+        Dim sql As String
+        sql = "select * from stdrec "
+        Dim ds As New DataSet
+        Dim da As OleDb.OleDbDataAdapter
+        da = New OleDb.OleDbDataAdapter(sql, con)
+        da.Fill(ds, "stdrec")
+        inc = inc + 1
+        maxrows = ds.Tables("stdrec").Rows.Count
+        If maxrows = inc Then
+            MsgBox("lass record")
+            inc = maxrows - 1
+            Exit Sub
+        Else
+            'inc = maxrows - 1
+            TextBox1.Text = ds.Tables("stdrec").Rows(inc).Item(0)
+            TextBox2.Text = ds.Tables("stdrec").Rows(inc).Item(1)
+
+        End If
+       
